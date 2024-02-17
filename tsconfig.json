@@ -1,0 +1,16 @@
+{
+	"compilerOptions": {
+		"module": "CommonJS",
+		"noImplicitAny": false,
+		"noImplicitReturns": true,
+		"noUncheckedIndexedAccess": true,
+		"outDir": "./build",
+		"removeComments": true,
+		"rootDir": "./src",
+		"strictNullChecks": true,
+		"target": "ES2022"
+	},
+	"files": [
+		"src/index.ts"
+	]
+}

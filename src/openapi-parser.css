@@ -1,0 +1,102 @@
+:root {
+  --body-font-family: "Roboto", sans-serif;
+  --monospace-font-family: "Roboto Mono", monospace;
+  --color-jet-70: #222;
+}
+
+.tag {
+  background: #ff991f;
+  border-radius: 0.2rem;
+  box-sizing: content-box;
+  color: var(--color-jet-70) !important;
+  display: inline-block;
+  font-size: 85%;
+  font-weight: 500;
+  padding: 0rem 0.2rem;
+  position: relative;
+  text-transform: uppercase;
+  min-width: 5rem;
+  text-align: center;
+}
+
+.get,
+.post,
+.put,
+.delete,
+.options,
+.head,
+.patch,
+.trace {
+  align-items: center;
+  font-family: var(--monospace-font-family);
+}
+
+.get::before,
+.post::before,
+.put::before,
+.delete::before,
+.options::before,
+.head::before,
+.patch::before,
+.trace::before {
+  border-radius: 0.2rem;
+  box-sizing: content-box;
+  display: inline-block;
+  font-family: var(--body-font-family);
+  font-size: 85%;
+  font-weight: 500;
+  margin-right: 0.8ex;
+  min-width: 5rem;
+  padding: 0rem 0.2rem;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.post::before {
+  background: #0052cc;
+  color: white;
+  content: 'POST';
+}
+
+.get::before {
+  background: #8cd1a1;
+  color: black;
+  content: 'GET';
+}
+
+.put::before {
+  background: #3773cc;
+  color: white;
+  content: 'PUT';
+}
+
+.delete::before {
+  background: #e65366;
+  color: white;
+  content: 'DELETE';
+}
+
+.options::before {
+  background: #d9007a;
+  color: white;
+  content: 'OPTIONS';
+}
+
+.head::before {
+  background: #fdfe00;
+  color: black;
+  content: 'HEAD';
+}
+
+.patch::before {
+  background: #00cc06;
+  color: white;
+  content: 'PATCH';
+}
+
+.trace::before {
+  background: #ffcd00;
+  color: black;
+  content: 'TRACE';
+}
+

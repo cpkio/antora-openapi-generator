@@ -1,0 +1,11 @@
+{
+  "nodeModulesDir": false,
+  "lint": {
+    "rules": {
+      "exclude": [
+        "no-unused-vars",
+        "6133"
+      ]
+    }
+  }
+}
