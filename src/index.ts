@@ -403,6 +403,8 @@ class ObjectArray {
         break
       }
     }
+    if (content.items?.allOf) { this.items = new ObjectAllOf(null, content.items); return }
+    if (content.items?.oneOf) { this.items = new ObjectOneOf(null, content.items); return }
   }
 
   toList(last = false): ObjectReturnType {
@@ -733,7 +735,6 @@ class ObjectOneOf {
     content.oneOf.forEach( (value) => {
       // if(value.type !== "object") { throw new Error('oneOf type can be "object" only') }
       this.oneOf.push(
-        // new ObjectObject(undefined as string, value as IObjectObject, false)
         resolvePropertiesList([null, value], [])
       )
     })
@@ -766,19 +767,15 @@ class RequestBody {
     // Если объект, итерируемся
     // У корневых объектов обязательность не показываем
     if (data.schema.type == "object"){
-      this.requests = new ObjectObject(null, data.schema?.properties as IObjectObject, false, false)
+      this.requests = new ObjectObject(null, data.schema as IObjectObject, false, false)
     }
     if (data.schema.type == "array"){
       this.requests = new ObjectArray(null, data.schema?.items as IObjectArray, false, false)
     }
     if (data.schema.allOf){
-      // const flat = flatAllOf(data.schema)
-      // this.requests = new ObjectObject(field as string, flat as object, flat?.required, false)
       this.requests = new ObjectAllOf(null, data.schema, false, false)
     }
     if (data.schema.oneOf){
-      // const flat = flatAllOf(data.schema)
-      // this.requests = new ObjectObject(field as string, flat as object, flat?.required, false)
       this.requests = new ObjectOneOf(null, data.schema, false, false)
     }
 
@@ -983,10 +980,10 @@ class Response {
         const schema = app[1].schema ?? {}
         const req = app[1].schema?.required
         if (schema?.type === "object") {
-          this.responseTypes.push([application, new ObjectObject(null, schema as object, req, false)])
+          this.responseTypes.push([application, new ObjectObject(null, schema as object, false, false)])
         }
         if (schema?.type === "array") {
-          this.responseTypes.push([application, new ObjectArray(null, schema as object, req, false)])
+          this.responseTypes.push([application, new ObjectArray(null, schema as object, false, false)])
         }
       })
     }

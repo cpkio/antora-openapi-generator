@@ -39,7 +39,7 @@ module.exports = function () {
         reader.pushInclude(out, target + '.adoc', target, 1, args)
 
       } catch (error) {
-        return console.error('Ошибка:', error);
+        return console.error('Error: ', error);
       }
     })
 
