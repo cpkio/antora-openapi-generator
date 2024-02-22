@@ -1,7 +1,7 @@
 # OpenAPI documentation generator for Antora
 
 This is an extension for Antora, which generates documentation based on
-Swagger (OpenAPI) specification files.
+Swagger (OpenAPI) v3.0 specification files.
 
 This is pre-alpha software. Still, it generates valid sample JSONs for
 sample request bodies and server responses, supports `allOf` and `oneOf`
@@ -13,7 +13,9 @@ specification to dereferenced data structure seems to be not possible in
 
 ## Requirements
 
-`@readme/openapi-parser` should be in `package.json` of your Antora playbook, then `npm install`:
+`@readme/openapi-parser` is used by extension, so it should be in
+`package.json` of your Antora playbook, then `npm install`.
+
 `package.json`:
 ```json
 {
@@ -23,7 +25,15 @@ specification to dereferenced data structure seems to be not possible in
 }
 ```
 
+Add loader to `playbook.yml` (do **NOT** add `@readme/openapi-parser` as extension):
+```yaml
+asciidoc:
+  extensions:
+  - './extensions/openapi-include-processor.js'
+```
+
 Optional: `@asciidoctor/tabs` extension in playbook:
+
 `package.json`:
 ```json
 {
@@ -32,6 +42,7 @@ Optional: `@asciidoctor/tabs` extension in playbook:
   }
 }
 ```
+
 `playbook.yml`:
 ```yaml
 asciidoc:
@@ -65,7 +76,11 @@ where all of your playbook extensions reside.
 
 * Merge `openapi-parser.css` to your Antora-UI or add it to supplemental UI
   (UI modifying instructions is not in scope of this repo). Without this
-  HTTP-verbs like `GET`, `POST`, PUT` before endpoints will not look like expected.
+  HTTP-verbs like `GET`, `POST`, `PUT` before endpoints will not look like expected.
+
+Extension used FontAwesome icons to display required and nullable parameters,
+but if it is not install properly, you will get no HTML code in output,
+`icon:check-circle[]` and `icon:ban[]` are dropped.
 
 ## How to use
 

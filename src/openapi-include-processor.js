@@ -7,7 +7,7 @@ module.exports = function () {
     this.handles(function(target) {
       return (
         (target.startsWith('file:///') || target.startsWith('http://') || target.startsWith('https://')) &&
-        (target.endsWith('.json') || target.endsWithi('.yaml') || target.endsWith('.yml'))
+        (target.endsWith('.json') || target.endsWith('.yaml') || target.endsWith('.yml'))
       )
     })
 
