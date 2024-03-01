@@ -820,16 +820,18 @@ class Parameter {
   private default
   public require: boolean = false
   private schema: ObjectAny
-
+  private inset = false // является ли этот параметр вложенным в другую таблицу
+  
   private text: string[] = []
   private req: string[] = []
 
   // При итерации по списку параметров в качестве имени передается его номер
-  constructor(parameterData: IParameter) {
+  constructor(parameterData: IParameter, inset: boolean) {
     this.require = parameterData?.required ?? false
     this.name = parameterData.name ?? null
     this.in = parameterData.in ?? null
     this.description = parameterData.description ?? ''
+    this.inset = inset ?? this.inset
 
     // Тут нужно переделывать, ибо я хочу, чтобы внутри параметра жил Schema
     // Object, у которого уже есть всё что нужно
@@ -845,10 +847,17 @@ class Parameter {
     if (this.require) {
       this.req.push(`${this.name}\n`)
     }
-    this.text.push(`| ${this.schema.type}\n`)
-    this.text.push(`| ${this.name}\n`)
-    this.text.push(`| ${_default}\n`)
-    this.text.push(`| ${desc} ${enumerable}\n`)
+    if (this.inset) {
+      this.text.push(`! ${this.schema.type}\n`)
+      this.text.push(`! ${this.name}\n`)
+      this.text.push(`! ${_default}\n`)
+      this.text.push(`! ${desc} ${enumerable}\n`)
+    } else {
+      this.text.push(`| ${this.schema.type}\n`)
+      this.text.push(`| ${this.name}\n`)
+      this.text.push(`| ${_default}\n`)
+      this.text.push(`| ${desc} ${enumerable}\n`)
+    }
     return [this.text, this.req]
   }
 
@@ -960,9 +969,47 @@ class Parameters {
 
 }
 
+class Headers {
+  private headers: Parameter[] = []
+  private req: string[] = []
+  public text: string[] = []
+
+  constructor(headers: object) {
+    Object.entries(headers).forEach( (header) => {
+      const param = Object.assign({}, header[1], { name: header[0] })
+      this.headers.push( new Parameter(param, true) )
+    })
+  }
+
+  toList() {
+    const tid = `req_${uuid()}`
+    this.text.push('\n\n.Заголовки\n')
+    this.text.push(`[%header,cols="10e,20m,10m,60a",id="${tid}"]\n`)
+    this.text.push('!===\n')
+    this.text.push('! Тип\n')
+    this.text.push('! Имя\n')
+    this.text.push('! По умолчанию\n')
+    this.text.push('! Описание\n\n')
+    Object.entries(this.headers).forEach( (value) => {
+      const [a, b] = value[1].toList()
+      this.text = this.text.concat(a)
+      if (b.length > 0) {
+        this.req = this.req.concat(b)
+      }
+    })
+    this.text.push('\n!===\n\n')
+    if (this.req.length > 0) {
+      this.text.push(`\n[.req, id="${tid}"]\n`)
+      this.text = this.text.concat(this.req)
+    }
+    return this.text
+  }
+}
+
 class Response {
   private httpcode: string
   private content: object
+  private headers: Headers
   private description: string
   public responseTypes: [string, (ObjectObject|ObjectArray)][] = []
 
@@ -988,11 +1035,17 @@ class Response {
       })
     }
 
+    if (this.content?.headers) {
+      this.headers = new Headers(this.content.headers)
+    }
+
   }
 
   toList() {
     this.text.push(`| ${this.httpcode}\n`)
     this.text.push(`| ${this.description}\n`)
+
+    this.text = this.text.concat(this.headers?.toList())
 
     if (this.responseTypes.length > 1) {
       this.text.push('\n[tabs]\n=====\n')
