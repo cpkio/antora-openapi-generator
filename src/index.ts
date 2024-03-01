@@ -916,7 +916,7 @@ class Parameters {
       const tid = `req_${uuid()}`
       this.text.push(`[%header,cols="10e,20m,10m,60a",id="${tid}"]\n`)
       this.text.push('|===\n')
-      this.text.push('| Тип данных\n')
+      this.text.push('| Тип\n')
       this.text.push('| Имя\n')
       this.text.push('| По умолчанию\n')
       this.text.push('| Описание\n\n')
@@ -1221,6 +1221,7 @@ class Path {
             })
           }
           if ((options?.parameters === undefined || options?.parameters == true) && value.parameters) {
+            this.text.push(`\n\ninclude::partial$${value.operationId}-request-pre.adoc[opts="optional"]\n\n`)
             this.text = this.text.concat(value.parameters.toList())
           }
           if (
@@ -1236,6 +1237,7 @@ class Path {
             this.text.push('\nОтвет::\n+\n--\n')
           }
           if ((options?.responses === undefined || options?.responses == true) && value.responses) {
+            this.text.push(`\n\ninclude::partial$${value.operationId}-response-pre.adoc[opts="optional"]\n\n`)
             this.text = this.text.concat(value.responses.toList())
           }
           if (options?.responses === undefined || options?.responses == true) {
