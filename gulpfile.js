@@ -20,4 +20,9 @@ gulp.task('loader', function () {
     .pipe(gulp.dest('dist'));
 });
 
-exports.default = gulp.series('build', 'merge', 'loader')
+gulp.task('css', function () {
+  return gulp.src(['src/openapi-parser.css'])
+    .pipe(gulp.dest('dist'));
+});
+
+exports.default = gulp.series('build', 'merge', 'loader', 'css')
